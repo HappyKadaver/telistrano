@@ -54,7 +54,7 @@ Test your setup by running the following command. This will post each stage's
 message to Slack in turn.
 
 ```
-$ cap production slack:deploy:test
+$ cap production telegram:deploy:test
 ```
 
 ## Usage
@@ -143,9 +143,6 @@ module Telistrano
 end
 ```
 
-The output would look like this:
-![Custom Messaging](https://raw.githubusercontent.com/phallstrom/slackistrano/overhaul/images/custom_messaging.jpg)
-
 To set this up:
 
 1. Add the above class to your app, for example `lib/custom_messaging.rb`.
@@ -161,12 +158,8 @@ To set this up:
    ```ruby
    set :telistrano, {
      klass: Telistrano::CustomMessaging,
-     channel: '#your-channel',
-     webhook: 'your-incoming-webhook-url'
+     chat_ids: [1, 2, 3, ...],
+     api_token: '<Api-Token>'
    }
    ```
-
-4. If you come up with something that you think others would enjoy submit it as
-   an issue along with a screenshot of the output from `cap production
-   slack:deploy:test` and I'll add it to the Wiki.
 
