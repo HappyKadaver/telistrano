@@ -40,9 +40,14 @@ You have two options to notify a channel in Slack when you deploy:
    flexibility.
 2. Using *Slackbot*, which will not use one of the five free integrations.
 
-### Incoming Webhook
-
-
+### Configuration
+Add the following to your deploy.rb :
+```
+set :telistrano, {
+    chat_ids: [1, 2, 3, ...],
+    api_token: '<Api-Token>'
+}
+```
 ### Test your Configuration
 
 Test your setup by running the following command. This will post each stage's
@@ -63,7 +68,7 @@ You can customize the messaging posted to Slack by providing your own messaging
 class and overriding several methods. Here is one example:
 
 ```ruby
-module Slackistrano
+module Telistrano
   class CustomMessaging < Messaging::Base
 
     # Send failed message to #ops. Send all other messages to default channels.
@@ -165,23 +170,3 @@ To set this up:
    an issue along with a screenshot of the output from `cap production
    slack:deploy:test` and I'll add it to the Wiki.
 
-## Disabling posting to Slack
-
-You can disable deployment notifications to a specific stage by setting the `:telistrano` 
-configuration variable to `false` instead of actual settings.
-
-```ruby
-set :telistrano, false
-```
-
-## TODO
-
-- Notify about incorrect configuration settings.
-
-## Contributing
-
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request

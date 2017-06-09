@@ -2,6 +2,7 @@ require_relative 'messaging/base'
 require 'net/http'
 require 'json'
 require 'forwardable'
+require 'telegram/bot'
 
 load File.expand_path("../tasks/telegram.rake", __FILE__)
 
@@ -37,19 +38,14 @@ module Telistrano
       return if payload.nil?
 
       payload = {
-        username: @messaging.username,
-        icon_url: @messaging.icon_url,
-        icon_emoji: @messaging.icon_emoji,
+          username: @messaging.username,
+          icon_url: @messaging.icon_url,
+          icon_emoji: @messaging.icon_emoji,
       }.merge(payload)
 
-      channels = Array(@messaging.channels_for(action))
-      if !@messaging.via_slackbot? == false && channels.empty?
-        channels = [nil] # default webhook channel
-      end
 
-      channels.each do |channel|
-        post(payload.merge(channel: channel))
-      end
+      post(payload)
+
     end
 
     private ##################################################
@@ -64,23 +60,15 @@ module Telistrano
       begin
         response = post_to_telegram(payload)
       rescue => e
-        backend.warn("[slackistrano] Error notifying Slack!")
-        backend.warn("[slackistrano]   Error: #{e.inspect}")
-      end
-
-      if response && response.code !~ /^2/
-        warn("[slackistrano] Slack API Failure!")
-        warn("[slackistrano]   URI: #{response.uri}")
-        warn("[slackistrano]   Code: #{response.code}")
-        warn("[slackistrano]   Message: #{response.message}")
-        warn("[slackistrano]   Body: #{response.body}") if response.message != response.body && response.body !~ /<html/
+        backend.warn("[telistrano] Error notifying Telestrano!")
+        backend.warn("[telistrano]   Error: #{e.inspect}")
       end
     end
 
     def post_to_telegram(payload)
-      Telegram::Bot::Client.run(@api_token) do |bot|
+      ::Telegram::Bot::Client.run(@api_token) do |bot|
         @chat_ids.each do |chat_id|
-          bot.api.send_message(chat_id: chat_id, text: payload)
+          bot.api.send_message(chat_id: chat_id, text: payload[:text])
         end
       end
     end
@@ -90,14 +78,14 @@ module Telistrano
     end
 
     def post_dry_run(payload)
-        backend.info("[slackistrano] Slackistrano Dry Run:")
+      backend.info("[slackistrano] Slackistrano Dry Run:")
       if @messaging.via_slackbot?
         backend.info("[slackistrano]   Team: #{@messaging.team}")
         backend.info("[slackistrano]   Token: #{@messaging.token}")
       else
         backend.info("[slackistrano]   Webhook: #{@messaging.webhook}")
       end
-        backend.info("[slackistrano]   Payload: #{payload.to_json}")
+      backend.info("[slackistrano]   Payload: #{payload.to_json}")
     end
 
   end
