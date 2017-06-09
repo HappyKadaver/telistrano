@@ -1,3 +1,3 @@
-module Slackistrano
-  VERSION = '3.8.1'
+module Telistrano
+  VERSION = '0.1'
 end
