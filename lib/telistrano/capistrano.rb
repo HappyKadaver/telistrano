@@ -3,7 +3,7 @@ require 'net/http'
 require 'json'
 require 'forwardable'
 
-load File.expand_path("../tasks/slack.rake", __FILE__)
+load File.expand_path("../tasks/telegram.rake", __FILE__)
 
 module Telistrano
   class Capistrano
@@ -17,8 +17,12 @@ module Telistrano
     def initialize(env)
       @env = env
       config = fetch(:telistrano, {})
-      @chat_ids = config.chat_ids
-      @api_token = config.api_token
+
+      klass = config[:klass] || Telistrano::Messaging::Base
+
+      @messaging = klass.new env: @env
+      @chat_ids = config[:chat_ids]
+      @api_token = config[:api_token]
     end
 
     def run(action)

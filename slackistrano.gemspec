@@ -10,7 +10,7 @@ Gem::Specification.new do |gem|
   gem.email         = ['althaus.dominic@gmail.com']
   gem.description   = %q{Send notifications to Telegram about Capistrano deployments.}
   gem.summary       = %q{Send notifications to Telegram about Capistrano deployments.}
-  gem.homepage      = ''
+  gem.homepage      = 'https://github.com/HappyKadaver/telistrano'
   gem.license       = 'MIT'
 
   gem.required_ruby_version = '>= 2.0.0'

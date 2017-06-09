@@ -1,4 +1,4 @@
-module Slackistrano
+module Telistrano
   module Messaging
     module Helpers
 

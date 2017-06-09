@@ -1,7 +1,7 @@
 require 'forwardable'
 require_relative 'helpers'
 
-module Slackistrano
+module Telistrano
   module Messaging
     class Base
 
@@ -10,14 +10,8 @@ module Slackistrano
       extend Forwardable
       def_delegators :env, :fetch
 
-      attr_reader :team, :token, :webhook
-
-      def initialize(env: nil, team: nil, channel: nil, token: nil, webhook: nil)
+      def initialize(env: nil)
         @env = env
-        @team = team
-        @channel = channel
-        @token = token
-        @webhook = webhook
       end
 
       def payload_for_updating
@@ -50,21 +44,12 @@ module Slackistrano
         }
       end
 
-      def channels_for(action)
-        @channel
-      end
-
       ################################################################################
 
       def payload_for(action)
         method = "payload_for_#{action}"
         respond_to?(method) && send(method)
       end
-
-      def via_slackbot?
-        @webhook.nil?
-      end
-
     end
   end
 end

@@ -1,4 +1,4 @@
-module Slackistrano
+module Telistrano
   module Messaging
     class Null < Base
       def payload_for_updating
